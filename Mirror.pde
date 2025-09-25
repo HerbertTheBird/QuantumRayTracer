@@ -8,6 +8,8 @@ class Mirror extends Surface{
   void display(PGraphics g){
     
   }
+  void mouseDown(double x, double y){
+  }
   void mouse(double x, double y){
     
   }

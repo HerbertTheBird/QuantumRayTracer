@@ -1,32 +1,32 @@
 class Wall extends Surface{
-  double[] pos; //x1, y1, x2, y2 - horizontal
+  float[] pos; //x1, y1, x2, y2 - horizontal
   int lock = -1;
-  Wall(double[] pos){
+  Wall(float[] pos){
     this.pos = pos;
   }
-  double[][] modifyRay(double[] ray){
-    return new double[0][0];
+  float[][] modifyRay(float[] ray){
+    return new float[0][0];
   }
-  double distance(double[] ray){
+  float distance(float[] ray){
     return rayToLine(ray, pos);
   }
   void display(PGraphics g){
-    g.stroke(128, 128, 128);
-    g.line((float)pos[0], (float)pos[1], (float)pos[2], (float)pos[3]);
+    g.stroke(255, 255, 255);
+    g.line(pos[0], pos[1], pos[2], pos[3]);
   }
-  void mouseDown(double x, double y){
-    if(dist((float)x, (float)y, (float)pos[0], (float)pos[1]) < mouseR){
+  void mouseDown(float x, float y){
+    if(dist(x, y, pos[0], pos[1]) < mouseRadius){
       lock = 0;
       pos[0] = x;
       pos[1] = y;
     }
-    if(dist((float)x, (float)y, (float)pos[2], (float)pos[3]) < mouseR){
+    if(dist(x, y, pos[2], pos[3]) < mouseRadius){
       lock = 1;
       pos[2] = x;
       pos[3] = y;
     }
   }
-  void mouse(double x, double y){
+  void mouse(float x, float y){
     if(lock == 0){
       pos[0] = x;
       pos[1] = y;

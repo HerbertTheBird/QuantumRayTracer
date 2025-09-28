@@ -1,34 +1,43 @@
 class Hole extends Surface{
-  double[] pos;
-  Hole(double[] pos){
+  float[] pos;
+  Hole(float[] pos){
     this.pos = pos;
   }
-  double[][] modifyRay(double[] ray){
-    double d = Math.atan2(pos[3]-pos[1], pos[2]-pos[0]);
-    double[][] out = new double[200][8];
+  float[][] modifyRay(float[] ray){
+    float d = atan2(pos[3]-pos[1], pos[2]-pos[0]);
+    float[][] out = new float[500][8];
     for(int i = 0; i < out.length; i++){
-      double dir = d-i*Math.PI/out.length;
-      for(int j = 0; j < 8; j++) out[i][j] = ray[j];
-      out[i][2] = Math.cos(dir);
-      out[i][3] = Math.sin(dir);
+      float r = random(PI);
+      float dir = d-r;
+      //pos
+      out[i][0] = ray[0];
+      out[i][1] = ray[1];
+      //dx dy
+      out[i][2] = cos(dir);
+      out[i][3] = sin(dir);
+      //medium speed
+      out[i][4] = ray[4];
+      //time
+      out[i][5] = ray[5];
+      //amplitude
+      out[i][6] = ray[6]/out.length;
+      //frequency
+      out[i][7] = ray[7];
+      
     }
     return out;
   }
-  double distance(double[] ray){
+  float distance(float[] ray){
     return rayToLine(ray, pos);
   }
-  void mouseDown(double x, double y){
+  void mouseDown(float x, float y){
   }
   void display(PGraphics g){
-    
   }
-  void mouse(double x, double y){
+  void mouse(float x, float y){
     
   }
   void mouseRelease(){
     
-  }
-  double cross(double a0, double a1, double b0, double b1){
-    return a0*b1-a1*b0;
   }
 }

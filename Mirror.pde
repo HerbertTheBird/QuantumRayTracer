@@ -1,16 +1,16 @@
 class Mirror extends Surface{
-  double[][] modifyRay(double[] ray){
+  float[][] modifyRay(float[] ray){
     return null;
   }
-  double distance(double[] ray){
+  float distance(float[] ray){
     return 0;
   }
   void display(PGraphics g){
     
   }
-  void mouseDown(double x, double y){
+  void mouseDown(float x, float y){
   }
-  void mouse(double x, double y){
+  void mouse(float x, float y){
     
   }
   void mouseRelease(){

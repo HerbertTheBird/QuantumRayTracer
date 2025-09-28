@@ -1,81 +1,44 @@
 class Display extends Surface{
-  double[] pos;
-  ArrayList<double[]> hit = new ArrayList();
-  double hitWidth = 20;
-  boolean firstSelect = false;
-  boolean secondSelect = false;
-  double selectSize = 20;
-  int precision = 800;
-  Display(double[] pos){
+  float[] pos;
+  int precision = 3200;
+  float[][] hit = new float[precision][2];
+  float brightness = 1E9;
+  Display(float[] pos){
     this.pos = pos;
   }
-  double[][] modifyRay(double[] ray){
-    double[] s = new double[] {pos[2]-pos[0], pos[3]-pos[1]};
-    double rxs = cross(ray[2], ray[3], s[0], s[1]);
-    double[] qp = new double[] {pos[0]-ray[0], pos[1]-ray[1]};
-    double qpxr = cross(qp[0], qp[1], ray[2], ray[3]);
-    double u = qpxr / rxs;
-    hit.add(new double[] {u, ray[6], (ray[7]*ray[5])%(PI*2)});
-    return new double[0][0];
+  float[][] modifyRay(float[] ray){
+    float[] s = new float[] {pos[2]-pos[0], pos[3]-pos[1]};
+    float rxs = cross(ray[2], ray[3], s[0], s[1]);
+    float[] qp = new float[] {pos[0]-ray[0], pos[1]-ray[1]};
+    float qpxr = cross(qp[0], qp[1], ray[2], ray[3]);
+    float u = qpxr / rxs;
+    
+    hit[min(precision-1, (int)(u*precision))][0] += ray[6]*cos(ray[5]);
+    hit[min(precision-1, (int)(u*precision))][1] += ray[6]*sin(ray[5]);
+    return new float[0][0];
   }
-  double distance(double[] ray){
+  float distance(float[] ray){
     return rayToLine(ray, pos);
   }
   void display(PGraphics g){
-    g.stroke(128, 128, 128);
-    g.line((float)pos[0], (float)pos[1], (float)pos[2], (float)pos[3]);
+    g.stroke(255, 255, 255);
+    g.line(pos[0], pos[1], pos[2], pos[3]);
     g.stroke(255, 0, 0);
-    double dx = (pos[2]-pos[0]);
-    double dy = (pos[3]-pos[1]);
-    //double hitFract = hitWidth/Math.sqrt(dx*dx+dy*dy);
-    double[][] vec = new double[precision][2];
+    float dx = (pos[2]-pos[0]);
+    float dy = (pos[3]-pos[1]);
     
-    for(int i = 0; i < hit.size(); i++){
-      for(int j = (int)(precision*hit.get(i)[0])-1; j <= (int)(precision*hit.get(i)[0])+1; j++){
-        if(j < 0 || j >= precision) continue;
-        vec[j][0] += Math.cos(hit.get(i)[2])*hit.get(i)[1];
-        vec[j][1] += Math.sin(hit.get(i)[2])*hit.get(i)[1];
-      }
-      //g.line((float)(pos[0]+Math.max(0, hit.get(i)[0]-hitFract/2)*dx), (float)(pos[1]+Math.max(0, hit.get(i)[0]-hitFract/2)*dy), (float)(pos[0]+Math.min(1, hit.get(i)[0]+hitFract/2)*dx), (float)(pos[1]+Math.min(1, hit.get(i)[0]+hitFract/2)*dy));
-    }
     for(int i = 0; i < precision; i++){
-      g.stroke(min(255, (float)((vec[i][0]*vec[i][0]+vec[i][1]*vec[i][1]))/16384*16));
-      g.fill(min(255, (float)((vec[i][0]*vec[i][0]+vec[i][1]*vec[i][1]))/16384*16));
-      g.line((float)(pos[0]+i*dx/precision), (float)(pos[1]+i*dy/precision), (float)(pos[0]+(i+1)*dx/precision), (float)(pos[1]+(i+1)*dy/precision));
-      g.rect((float)(pos[0]+i*dx/precision), (float)(pos[1]+i*dy/precision)-80, (float)(dx/precision), 60);
+      float intensity = pow(dist(0, 0, hit[i][0], hit[i][1])/totalRays, 2)*precision*brightness;
+      g.fill(constrain(intensity, 0, 255));
+      g.stroke(constrain(intensity, 0, 255));
+      g.line((pos[0]+i*dx/precision), (pos[1]+i*dy/precision), (pos[0]+(i+1)*dx/precision), (pos[1]+(i+1)*dy/precision));
+      g.rect((pos[0]+i*dx/precision)+1E-7, (pos[1]+i*dy/precision), 2E-2, (dy/precision));
     }
-    g.fill(128);
-    g.stroke(128);
-    g.circle((float)pos[0], (float)pos[1], (float)selectSize);
-    g.circle((float)pos[2], (float)pos[3], (float)selectSize);
-    hit.clear();
   }
-  double cross(double a0, double a1, double b0, double b1){
-    return a0*b1-a1*b0;
+  void mouseDown(float x, float y){
   }
-  void mouseDown(double x, double y){
-  }
-  void mouse(double x, double y){
-    if(firstSelect){
-      pos[0] = x;
-      pos[1] = y;
-      return;
-    }
-    if(secondSelect){
-      pos[2] = x;
-      pos[3] = y;
-    }
-    if((pos[0]-x)*(pos[0]-x)+(pos[1]-y)*(pos[1]-y) < selectSize*selectSize){
-      firstSelect = true;
-      return;
-    }
-    if((pos[2]-x)*(pos[2]-x)+(pos[3]-y)*(pos[3]-y) < selectSize*selectSize){
-      secondSelect = true;
-      return;
-    }
+  void mouse(float x, float y){
   }
   void mouseRelease(){
-    firstSelect = false;
-    secondSelect = false;
   }
 }

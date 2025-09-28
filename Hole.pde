@@ -20,7 +20,7 @@ class Hole extends Surface{
       //time
       out[i][5] = ray[5];
       //amplitude
-      out[i][6] = ray[6]/out.length;
+      out[i][6] = ray[6]/sqrt(out.length);
       //frequency
       out[i][7] = ray[7];
       

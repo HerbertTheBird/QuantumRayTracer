@@ -1,8 +1,8 @@
 class Display extends Surface{
   float[] pos;
-  int precision = 3200;
+  int precision = 12800;
   float[][] hit = new float[precision][2];
-  float brightness = 1E9;
+  float brightness = 1E6;
   Display(float[] pos){
     this.pos = pos;
   }

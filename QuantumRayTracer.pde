@@ -11,7 +11,7 @@ PGraphics g;
 
 float[] lightPos = {-8E-6, 0};
 int totalRays = 1;
-int raysPerSecond = 100;
+int raysPerSecond = 50;
 
 boolean[] keys = new boolean[256];
 void setup() {
@@ -19,16 +19,16 @@ void setup() {
   float w = 1E-6;
   float d = 1E-4;
   float x = 2.5E-1;
-  surfaces.add(new Display(new float[] {x, x/15, x, -x/15})); 
+  surfaces.add(new Display(new float[] {x, x/4, x, -x/4})); 
   surfaces.add(new Wall(new float[] {-x, -1,   -x, -(w+d)/2})); 
   surfaces.add(new Hole(new float[] {-x, -(w+d)/2, -x, -(d-w)/2})); 
   surfaces.add(new Wall(new float[] {-x, -(d-w)/2, -x,  (d-w)/2})); 
   surfaces.add(new Hole(new float[] {-x,  (d-w)/2, -x,  (w+d)/2})); 
   surfaces.add(new Wall(new float[] {-x,  1,   -x,  (w+d)/2})); 
   
-  for(int i = 1; i <= 5; i++){
-    surfaces.add(new Wall(new float[] {x+i*1e-3,  3e-3*i,   x+i*1e-3,  -3e-3*i})); 
-  }
+  //for(int i = 1; i <= 10; i++){
+  //  surfaces.add(new Wall(new float[] {x+i*1e-3,  3e-3*i,   x+i*1e-3,  -3e-3*i})); 
+  //}
   
 
 
@@ -36,22 +36,22 @@ void setup() {
 void draw() {
   println(frameRate);
   if(keys['d']){
-    centerX -= 10.0/zoom;
+    centerX -= 20.0/zoom;
   }
   if(keys['a']){
-    centerX += 10.0/zoom;
+    centerX += 20.0/zoom;
   }
   if(keys['s']){
-    centerY -= 10.0/zoom;
+    centerY -= 20.0/zoom;
   }
   if(keys['w']){
-    centerY += 10.0/zoom;
+    centerY += 20.0/zoom;
   }
   if(keys['e']){
-    zoom *= 1.02;
+    zoom *= 1.05;
   }
   if(keys['q']){
-    zoom /= 1.02;
+    zoom /= 1.05;
   }
   g.beginDraw();
   g.background(0, 0, 0);
@@ -74,8 +74,8 @@ void draw() {
     totalRays++;
   }
   for(Surface s:surfaces){
-    if(mousePressed)
-      s.mouse(mouseX, mouseY);
+    //if(mousePressed)
+      //s.mouse(mouseX, mouseY);
     s.display(g);
   }
   g.endDraw();
@@ -114,6 +114,7 @@ void rayTrace(float[] ray, int depth){
       }
       rayTrace(rays[i], depth+1);
     }
+    g.stroke(64, 64, 64);
   }
 }
 void copyTo(float[] original, float[] target){
@@ -126,12 +127,12 @@ float[] copy(float[] in){
 }
 void mousePressed(){
   for(Surface s:surfaces){
-    s.mouseDown(mouseX, mouseY);
+    //s.mouseDown(mouseX, mouseY);
   }
 }
 void mouseReleased(){
   for(Surface s:surfaces){
-    s.mouseRelease();
+    //s.mouseRelease();
   }
 }
 void keyPressed(){
